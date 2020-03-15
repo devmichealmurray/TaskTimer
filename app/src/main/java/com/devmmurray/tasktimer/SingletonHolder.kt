@@ -2,6 +2,11 @@ package com.devmmurray.tasktimer
 
 import android.util.Log
 
+/**
+ * Double-Checked Locking Algorithm written by Christophe Beyls
+ * https://medium.com/@BladeCoder/kotlin-singletons-with-argument-194ef06edd9e
+ */
+
 private const val TAG = "SingletonHolder"
 
 open class SingletonHolder<out T, in A>(creator: (A) -> T) {
