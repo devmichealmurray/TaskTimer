@@ -51,6 +51,8 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
         task_details_container.visibility = if (mTwoPane) View.INVISIBLE else View.GONE
         // and show the left hand pane
         mainFragment.view?.visibility = View.VISIBLE
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
 
     override fun onSaveClicked() {
@@ -67,6 +69,10 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menumain_addtask -> taskEditRequest(null)
+            android.R.id.home -> {
+                val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
+                removeEditPane(fragment)
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -80,5 +86,14 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked {
             .replace(R.id.task_details_container, newFragment)
             .commit()
         showEditPane()
+    }
+
+    override fun onBackPressed() {
+        val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
+        if (fragment == null || mTwoPane) {
+            super.onBackPressed()
+        } else {
+            removeEditPane()
+        }
     }
 }

@@ -26,7 +26,7 @@ private const val TASK_DURATIONS_ID = 401
 val CONTENT_AUTHORITY_URI: Uri = Uri.parse("content://$CONTENT_AUTHORITY")
 
 class AppProvider : ContentProvider() {
-    private val uriMatcher by lazy { buildUriMatcher() }
+    private val uriMatcher: UriMatcher by lazy { buildUriMatcher() }
 
     private fun buildUriMatcher(): UriMatcher {
         Log.d(TAG, "buildUriMatcher starts")
@@ -46,8 +46,7 @@ class AppProvider : ContentProvider() {
     }
 
     override fun getType(uri: Uri): String? {
-        val match = uriMatcher.match(uri)
-        return when (match) {
+        return when (uriMatcher.match(uri)) {
             TASKS -> TasksContract.CONTENT_TYPE
             TASKS_ID -> TasksContract.CONTENT_ITEM_TYPE
             TIMINGS -> TimingsContract.CONTENT_TYPE
