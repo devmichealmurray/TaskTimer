@@ -1,7 +1,6 @@
 package com.devmmurray.tasktimer
 
 import android.annotation.SuppressLint
-import android.content.ContentValues
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_add_edit.*
 
 private const val TAG = "Add/Edit Fragment"
@@ -18,6 +18,10 @@ private const val ARG_TASK = "Task"
 class AddEditFragment : Fragment() {
     private var task: Task? = null
     private var listener: OnSaveClicked? = null
+    private val viewModel by lazy {
+        ViewModelProvider(this)
+            .get(TaskTimerViewModel::class.java)
+    }
 
     interface OnSaveClicked {
         fun onSaveClicked()
@@ -51,36 +55,27 @@ class AddEditFragment : Fragment() {
         }
     }
 
-    // Update database if at least one field is changed
-    private fun saveTask() {
-        val sortOrder = if (addedit_sortorder.text.isNotEmpty())
-            Integer.parseInt(addedit_sortorder.text.toString()) else 0
-        val values = ContentValues()
-        val task = task
-        if (task != null) {
-            if (addedit_name.text.toString() != task.name) {
-                values.put(TasksContract.Columns.TASK_NAME, addedit_name.text.toString())
-            }
-            if (addedit_description.text.toString() != task.description) {
-                values.put(TasksContract.Columns.TASK_DESCRIPTION, addedit_description.text.toString())
-            }
-            if (sortOrder != task.sortOrder) {
-                values.put(TasksContract.Columns.TASK_SORT_ORDER, sortOrder)
-            }
-            if (values.size() != 0) {
-                activity?.contentResolver?.update(TasksContract.buildUriFromId(task.id),
-                    values, null, null)
-            }
+    private fun taskFromUi(): Task {
+        val sortOrder = if (addedit_sortorder.text.isNotEmpty()) {
+            Integer.parseInt(addedit_sortorder.text.toString())
         } else {
-            if (addedit_name.text.isNotEmpty()) {
-                values.put(TasksContract.Columns.TASK_NAME, addedit_name.text.toString())
-                if (addedit_description.text.isNotEmpty()) {
-                    values.put(TasksContract.Columns.TASK_DESCRIPTION,
-                        addedit_description.text.toString())
-                }
-                values.put(TasksContract.Columns.TASK_SORT_ORDER, sortOrder)
-                activity?.contentResolver?.insert(TasksContract.CONTENT_URI, values)
-            }
+            0
+        }
+        val newTask: Task
+        newTask = Task(
+            addedit_name.text.toString(),
+            addedit_description.text.toString(),
+            sortOrder
+        )
+        newTask.id = task?.id ?: 0
+
+        return newTask
+    }
+
+    private fun saveTask() {
+        val newTask = taskFromUi()
+        if (newTask != task) {
+            task = viewModel.saveTask(newTask)
         }
     }
 

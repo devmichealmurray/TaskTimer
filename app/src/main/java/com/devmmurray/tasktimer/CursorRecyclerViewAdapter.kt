@@ -11,12 +11,40 @@ import kotlinx.android.synthetic.main.task_list_items.*
 
 class TaskViewHolder(override val containerView: View) :
     RecyclerView.ViewHolder(containerView),
-    LayoutContainer {}
+    LayoutContainer {
+
+    fun bind(task: Task, listener: CursorRecyclerViewAdapter.OnTaskClickListener) {
+        tli_name.text = task.name
+        tli_description.text = task.description
+        tli_edit.visibility = View.VISIBLE
+        tli_delete.visibility = View.VISIBLE
+
+        tli_edit.setOnClickListener {
+            listener.onEditClick(task)
+        }
+        tli_delete.setOnClickListener {
+            listener.onDeleteClick(task)
+        }
+        containerView.setOnLongClickListener {
+            listener.onTaskLongClick(task)
+            true
+        }
+    }
+}
 
 private const val TAG = "RecyclerViewAdapter"
 
-class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
+class CursorRecyclerViewAdapter(
+    private var cursor: Cursor?,
+    private val listener: OnTaskClickListener
+) :
     RecyclerView.Adapter<TaskViewHolder>() {
+
+    interface OnTaskClickListener {
+        fun onEditClick(task: Task)
+        fun onDeleteClick(task: Task)
+        fun onTaskLongClick(task: Task)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         Log.d(TAG, ".onCreateViewHolder: new view requested")
@@ -46,10 +74,7 @@ class CursorRecyclerViewAdapter(private var cursor: Cursor?) :
             )
             //ID is not set in constructor
             task.id = cursor.getLong(cursor.getColumnIndex(TasksContract.Columns.ID))
-            holder.tli_name.text = task.name
-            holder.tli_description.text = task.description
-            holder.tli_edit.visibility = View.VISIBLE
-            holder.tli_delete.visibility = View.VISIBLE
+            holder.bind(task, listener)
         }
     }
 

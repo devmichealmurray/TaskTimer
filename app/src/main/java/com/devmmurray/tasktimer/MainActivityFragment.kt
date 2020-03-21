@@ -1,5 +1,6 @@
 package com.devmmurray.tasktimer
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,12 +11,25 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_main.*
+import java.lang.RuntimeException
 
 private const val TAG = "MainActivityFragment"
 
-class MainActivityFragment : Fragment() {
+class MainActivityFragment : Fragment(), CursorRecyclerViewAdapter.OnTaskClickListener {
     private val viewModel by lazy { ViewModelProvider(activity!!).get(TaskTimerViewModel::class.java) }
-    private val mAdapter = CursorRecyclerViewAdapter(null)
+    private val mAdapter = CursorRecyclerViewAdapter(null,this)
+
+    interface OnTaskEdit {
+        fun onTaskEdit(task: Task)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        if (context !is OnTaskEdit) {
+            throw RuntimeException("$context, must implement OnTaskEdit")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,5 +51,13 @@ class MainActivityFragment : Fragment() {
 
         task_list.layoutManager = LinearLayoutManager(context)
         task_list.adapter = mAdapter
+    }
+
+    override fun onEditClick(task: Task) = (activity as OnTaskEdit).onTaskEdit(task)
+
+    override fun onDeleteClick(task: Task) = viewModel.deleteTask(task.id)
+
+    override fun onTaskLongClick(task: Task) {
+        TODO("Not yet implemented")
     }
 }
