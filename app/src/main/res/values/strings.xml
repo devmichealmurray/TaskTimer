@@ -23,5 +23,16 @@
     <string name="addedit_save_button">SAVE</string>
     <string name="instructions">Use the add button (+) in the toolbar to create new tasks.Tasks with lower sort orders will be placed higher in the list.Task with equal sort orders will be sorted alphabetically.Tapping a task will start the timer for that task (and will stop the timer).Each task has Edit and Delete buttons to change the task details or remove the task.</string>
     <string name="instructions_heading">Instructions</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="deldiag_positive_caption">Delete</string>
+    <string name="deldiag_message">Deleting will also delete all timing data associated with task id %1$d: %2$s.</string>
+    <string name="canelEditDiag_message">You have unsaved changes. Discard or continue editing?</string>
+    <string name="cancelEditDiag_positive_caption">Discard</string>
+    <string name="cancelEditDiag_negative_caption">Continue Editing</string>
+    <string name="about_copyright">"Copyright © 2020 "</string>
+    <string name="about_weblink">Instructions Available: www.tasktimer.com</string>
+    <string name="about_email">For Support: michealmurray16@gmail.com</string>
+    <string name="about_credits">"Icon Used With Permission From <b>PublicDomainVectors.Org</b>"</string>
 
 </resources>

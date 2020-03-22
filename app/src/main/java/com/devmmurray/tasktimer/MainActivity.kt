@@ -13,8 +13,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
 private const val TAG = "MainActivity"
+private const val DIALOG_ID_CANCEL_EDIT = 1
 
-class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked, MainActivityFragment.OnTaskEdit {
+class MainActivity : AppCompatActivity(),
+    AddEditFragment.OnSaveClicked,
+    MainActivityFragment.OnTaskEdit,
+    AppDialog.DialogEvents {
+
     // Whether or not the activity is in 2-pane mode
     private var mTwoPane = false
 
@@ -25,7 +30,7 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked, MainAct
         setSupportActionBar(toolbar)
 
         mTwoPane = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-        val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
+        val fragment = findFragmentById(R.id.task_details_container)
         if (fragment != null) {
             showEditPane()
         } else {
@@ -42,11 +47,8 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked, MainAct
 
     private fun removeEditPane(fragment: Fragment? = null) {
         Log.d(TAG, "removeEditPane called")
-        if (fragment != null) {
-            supportFragmentManager.beginTransaction()
-                .remove(fragment)
-                .commit()
-        }
+        if (fragment != null) removeFragment(fragment)
+
         // set visibility of right-hand pane
         task_details_container.visibility = if (mTwoPane) View.INVISIBLE else View.GONE
         // and show the left hand pane
@@ -57,8 +59,7 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked, MainAct
 
     override fun onSaveClicked() {
         Log.d(TAG, ".onSaveClicked called")
-        val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
-        removeEditPane(fragment)
+        removeEditPane(findFragmentById(R.id.task_details_container))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -70,8 +71,18 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked, MainAct
         when (item.itemId) {
             R.id.menumain_addtask -> taskEditRequest(null)
             android.R.id.home -> {
-                val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
-                removeEditPane(fragment)
+                val fragment = findFragmentById(R.id.task_details_container)
+
+                if ((fragment is AddEditFragment) && fragment.isDirty()) {
+                    showConfirmationDialog(
+                        DIALOG_ID_CANCEL_EDIT,
+                        getString(R.string.canelEditDiag_message),
+                        R.string.cancelEditDiag_positive_caption,
+                        R.string.cancelEditDiag_negative_caption
+                    )
+                } else {
+                    removeEditPane(fragment)
+                }
             }
         }
         return super.onOptionsItemSelected(item)
@@ -93,11 +104,27 @@ class MainActivity : AppCompatActivity(), AddEditFragment.OnSaveClicked, MainAct
     }
 
     override fun onBackPressed() {
-        val fragment = supportFragmentManager.findFragmentById(R.id.task_details_container)
+        val fragment = findFragmentById(R.id.task_details_container)
         if (fragment == null || mTwoPane) {
             super.onBackPressed()
         } else {
-            removeEditPane()
+            if ((fragment is AddEditFragment) && fragment.isDirty()) {
+                showConfirmationDialog(
+                    DIALOG_ID_CANCEL_EDIT,
+                    getString(R.string.canelEditDiag_message),
+                    R.string.cancelEditDiag_positive_caption,
+                    R.string.cancelEditDiag_negative_caption
+                )
+            } else {
+                removeEditPane(fragment)
+            }
+        }
+    }
+
+    override fun onPositiveDialogResult(dialogID: Int, args: Bundle) {
+        Log.d(TAG, "onPositiveDialogResult called. DialogID: $dialogID")
+        if (dialogID == DIALOG_ID_CANCEL_EDIT) {
+            removeEditPane(findFragmentById(R.id.task_details_container))
         }
     }
 }

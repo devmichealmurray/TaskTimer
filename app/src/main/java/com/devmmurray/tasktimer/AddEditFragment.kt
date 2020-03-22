@@ -19,8 +19,10 @@ class AddEditFragment : Fragment() {
     private var task: Task? = null
     private var listener: OnSaveClicked? = null
     private val viewModel by lazy {
-        ViewModelProvider(this)
-            .get(TaskTimerViewModel::class.java)
+        activity?.let {
+            ViewModelProvider(it)
+                .get(TaskTimerViewModel::class.java)
+        }
     }
 
     interface OnSaveClicked {
@@ -72,10 +74,18 @@ class AddEditFragment : Fragment() {
         return newTask
     }
 
+    fun isDirty(): Boolean {
+        val newTask = taskFromUi()
+        return ((newTask != task) &&
+                (newTask.name.isNotBlank()
+                        || newTask.description.isNotBlank()
+                        || newTask.sortOrder != 0))
+    }
+
     private fun saveTask() {
         val newTask = taskFromUi()
         if (newTask != task) {
-            task = viewModel.saveTask(newTask)
+            task = viewModel?.saveTask(newTask)
         }
     }
 
