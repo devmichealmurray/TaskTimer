@@ -30,9 +30,9 @@
     <string name="canelEditDiag_message">You have unsaved changes. Discard or continue editing?</string>
     <string name="cancelEditDiag_positive_caption">Discard</string>
     <string name="cancelEditDiag_negative_caption">Continue Editing</string>
-    <string name="about_copyright">"Copyright © 2020 "</string>
-    <string name="about_weblink">Instructions Available: www.tasktimer.com</string>
-    <string name="about_email">For Support: michealmurray16@gmail.com</string>
+    <string name="about_copyright">"Micheal Murray"</string>
+    <string name="about_weblink">GitHub Account: github.com/devmichealmurray</string>
+    <string name="about_email">Email: michealmurray16@gmail.com</string>
     <string name="about_credits">"Icon Used With Permission From <b>PublicDomainVectors.Org</b>"</string>
 
 </resources>

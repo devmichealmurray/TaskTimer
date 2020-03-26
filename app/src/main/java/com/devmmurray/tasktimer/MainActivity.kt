@@ -7,8 +7,11 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.devmmurray.tasktimer.R.mipmap.ic_launcher
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
@@ -22,6 +25,7 @@ class MainActivity : AppCompatActivity(),
 
     // Whether or not the activity is in 2-pane mode
     private var mTwoPane = false
+    private var aboutDialog: AlertDialog? = null
 
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +33,9 @@ class MainActivity : AppCompatActivity(),
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        mTwoPane = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        mTwoPane = resources
+            .configuration
+            .orientation == Configuration.ORIENTATION_LANDSCAPE
         val fragment = findFragmentById(R.id.task_details_container)
         if (fragment != null) {
             showEditPane()
@@ -70,9 +76,9 @@ class MainActivity : AppCompatActivity(),
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menumain_addtask -> taskEditRequest(null)
+            R.id.menumain_showAbout -> showAboutDialog()
             android.R.id.home -> {
                 val fragment = findFragmentById(R.id.task_details_container)
-
                 if ((fragment is AddEditFragment) && fragment.isDirty()) {
                     showConfirmationDialog(
                         DIALOG_ID_CANCEL_EDIT,
@@ -87,6 +93,57 @@ class MainActivity : AppCompatActivity(),
         }
         return super.onOptionsItemSelected(item)
     }
+
+    @SuppressLint("InflateParams")
+    private fun showAboutDialog() {
+        val messageView = layoutInflater.inflate(R.layout.about, null, false)
+        val builder = AlertDialog.Builder(this)
+
+        builder.setTitle(R.string.app_name)
+        builder.setIcon(ic_launcher)
+
+        builder.setPositiveButton(R.string.ok) { _, _ ->
+            if (aboutDialog != null && aboutDialog?.isShowing == true) {
+                aboutDialog?.dismiss()
+            }
+        }
+
+        aboutDialog = builder.setView(messageView).create()
+        aboutDialog?.setCanceledOnTouchOutside(true)
+
+        messageView.setOnClickListener {
+            if (aboutDialog != null && aboutDialog?.isShowing == true) {
+                aboutDialog?.dismiss()
+            }
+        }
+
+        val aboutVersion = messageView.findViewById(R.id.about_version) as TextView
+        aboutVersion.text = BuildConfig.VERSION_NAME
+
+        aboutDialog?.show()
+    }
+//@SuppressLint("InflateParams")
+//    private fun showAboutDialog() {
+//        val messageView = layoutInflater.inflate(R.layout.about, null, false)
+//        val builder = AlertDialog.Builder(this)
+//
+//        builder.setTitle(R.string.app_name)
+//        builder.setIcon(ic_launcher)
+//
+//        aboutDialog = builder.setView(messageView).create()
+//        aboutDialog?.setCanceledOnTouchOutside(true)
+//
+//        messageView.setOnClickListener {
+//            if (aboutDialog != null && aboutDialog?.isShowing == true) {
+//                aboutDialog?.dismiss()
+//            }
+//        }
+//
+//        val aboutVersion = messageView.findViewById(R.id.about_version) as TextView
+//        aboutVersion.text = BuildConfig.VERSION_NAME
+//
+//        aboutDialog?.show()
+//    }
 
     override fun onTaskEdit(task: Task) {
         taskEditRequest(task)
@@ -125,6 +182,13 @@ class MainActivity : AppCompatActivity(),
         Log.d(TAG, "onPositiveDialogResult called. DialogID: $dialogID")
         if (dialogID == DIALOG_ID_CANCEL_EDIT) {
             removeEditPane(findFragmentById(R.id.task_details_container))
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (aboutDialog?.isShowing == true) {
+            aboutDialog?.dismiss()
         }
     }
 }
