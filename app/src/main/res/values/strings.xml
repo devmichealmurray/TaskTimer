@@ -27,12 +27,15 @@
     <string name="cancel">Cancel</string>
     <string name="deldiag_positive_caption">Delete</string>
     <string name="deldiag_message">Deleting will also delete all timing data associated with task id %1$d: %2$s.</string>
-    <string name="canelEditDiag_message">You have unsaved changes. Discard or continue editing?</string>
+    <string name="cancelEditDiag_message">You have unsaved changes. Discard or continue editing?</string>
     <string name="cancelEditDiag_positive_caption">Discard</string>
     <string name="cancelEditDiag_negative_caption">Continue Editing</string>
     <string name="about_copyright">"Micheal Murray"</string>
-    <string name="about_weblink">GitHub Account: github.com/devmichealmurray</string>
+    <string name="about_weblink">GitHub Account:</string>
+    <string name="about_url"><u>"https://www.github.com/devmichealmurray"</u></string>
+    <string name="about_weblink_v21">GitHub Account: github.com/devmichealmurray</string>
     <string name="about_email">Email: michealmurray16@gmail.com</string>
     <string name="about_credits">"Icon Used With Permission From <b>PublicDomainVectors.Org</b>"</string>
+    <string name="about_url_error">No Browser Application Found</string>
 
 </resources>

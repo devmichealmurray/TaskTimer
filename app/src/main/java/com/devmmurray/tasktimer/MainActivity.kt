@@ -1,13 +1,17 @@
 package com.devmmurray.tasktimer
 
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -82,7 +86,7 @@ class MainActivity : AppCompatActivity(),
                 if ((fragment is AddEditFragment) && fragment.isDirty()) {
                     showConfirmationDialog(
                         DIALOG_ID_CANCEL_EDIT,
-                        getString(R.string.canelEditDiag_message),
+                        getString(R.string.cancelEditDiag_message),
                         R.string.cancelEditDiag_positive_caption,
                         R.string.cancelEditDiag_negative_caption
                     )
@@ -120,32 +124,25 @@ class MainActivity : AppCompatActivity(),
         val aboutVersion = messageView.findViewById(R.id.about_version) as TextView
         aboutVersion.text = BuildConfig.VERSION_NAME
 
-        aboutDialog?.show()
-    }
-//@SuppressLint("InflateParams")
-//    private fun showAboutDialog() {
-//        val messageView = layoutInflater.inflate(R.layout.about, null, false)
-//        val builder = AlertDialog.Builder(this)
-//
-//        builder.setTitle(R.string.app_name)
-//        builder.setIcon(ic_launcher)
-//
-//        aboutDialog = builder.setView(messageView).create()
-//        aboutDialog?.setCanceledOnTouchOutside(true)
-//
-//        messageView.setOnClickListener {
-//            if (aboutDialog != null && aboutDialog?.isShowing == true) {
-//                aboutDialog?.dismiss()
+        // Nullable type: TextView won't exist on API 21 or Higher
+//        val aboutUrl: TextView? = messageView?.findViewById(R.id.about_url)
+//        aboutUrl?.setOnClickListener { v ->
+//            val intent = Intent(Intent.ACTION_VIEW)
+//            val s = (v as TextView).text.toString()
+//            intent.data = Uri.parse(s)
+//            try {
+//                startActivity(intent)
+//            } catch (e: ActivityNotFoundException) {
+//                Toast.makeText(this, getString(R.string.about_url_error), Toast.LENGTH_SHORT)
+//                    .show()
 //            }
 //        }
-//
-//        val aboutVersion = messageView.findViewById(R.id.about_version) as TextView
-//        aboutVersion.text = BuildConfig.VERSION_NAME
-//
-//        aboutDialog?.show()
-//    }
+        aboutDialog?.show()
+    }
 
-    override fun onTaskEdit(task: Task) {
+
+
+        override fun onTaskEdit(task: Task) {
         taskEditRequest(task)
     }
 
@@ -168,7 +165,7 @@ class MainActivity : AppCompatActivity(),
             if ((fragment is AddEditFragment) && fragment.isDirty()) {
                 showConfirmationDialog(
                     DIALOG_ID_CANCEL_EDIT,
-                    getString(R.string.canelEditDiag_message),
+                    getString(R.string.cancelEditDiag_message),
                     R.string.cancelEditDiag_positive_caption,
                     R.string.cancelEditDiag_negative_caption
                 )
