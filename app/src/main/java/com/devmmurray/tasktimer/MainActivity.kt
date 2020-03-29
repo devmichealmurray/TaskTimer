@@ -80,6 +80,10 @@ class MainActivity : AppCompatActivity(),
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menumain_addtask -> taskEditRequest(null)
+            R.id.menumain_settings -> {
+                val dialog = SettingsDialog()
+                dialog.show(supportFragmentManager, null)
+            }
             R.id.menumain_showAbout -> showAboutDialog()
             android.R.id.home -> {
                 val fragment = findFragmentById(R.id.task_details_container)
@@ -123,20 +127,6 @@ class MainActivity : AppCompatActivity(),
 
         val aboutVersion = messageView.findViewById(R.id.about_version) as TextView
         aboutVersion.text = BuildConfig.VERSION_NAME
-
-        // Nullable type: TextView won't exist on API 21 or Higher
-//        val aboutUrl: TextView? = messageView?.findViewById(R.id.about_url)
-//        aboutUrl?.setOnClickListener { v ->
-//            val intent = Intent(Intent.ACTION_VIEW)
-//            val s = (v as TextView).text.toString()
-//            intent.data = Uri.parse(s)
-//            try {
-//                startActivity(intent)
-//            } catch (e: ActivityNotFoundException) {
-//                Toast.makeText(this, getString(R.string.about_url_error), Toast.LENGTH_SHORT)
-//                    .show()
-//            }
-//        }
         aboutDialog?.show()
     }
 
