@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Strings resources for the settings dialog -->
 <resources>
-    <string name="settingsFirstDayPrompt">Select Which Day Starts Your Week:</string>
+    <string name="settingsFirstDayPrompt">Start Your Weeks On:</string>
     <string-array name="settingsFirstDays">
         <item>Sunday</item>
         <item>Monday</item>
@@ -11,17 +11,17 @@
         <item>Friday</item>
         <item>Saturday</item>
     </string-array>
-    <string name="settingsIgnoreSecondTitle">Ignore Timings Less Than %1d %2s</string>
+    <string name="settingsIgnoreSecondTitle">Ignore Timings Under %1d %2s</string>
     <plurals name="settingsLittleUnits">
-        <item quantity="one">second</item>
-        <item quantity="other">seconds</item>
+        <item quantity="one">Second</item>
+        <item quantity="other">Seconds</item>
     </plurals>
     <plurals name="settingsBigUnits">
-        <item quantity="one">minute</item>
-        <item quantity="other">minutes</item>
+        <item quantity="one">Minute</item>
+        <item quantity="other">Minutes</item>
     </plurals>
     <plurals name="settingsHugeUnits">
-        <item quantity="one">hour</item>
-        <item quantity="other">hours</item>
+        <item quantity="one">Hour</item>
+        <item quantity="other">Hours</item>
     </plurals>
 </resources>

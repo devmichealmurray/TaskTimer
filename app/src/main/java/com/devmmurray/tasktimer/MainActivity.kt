@@ -46,7 +46,6 @@ class MainActivity : AppCompatActivity(),
         } else {
             task_details_container.visibility = if (mTwoPane) View.INVISIBLE else View.GONE
             mainFragment.view?.visibility = View.VISIBLE
-
         }
     }
 
