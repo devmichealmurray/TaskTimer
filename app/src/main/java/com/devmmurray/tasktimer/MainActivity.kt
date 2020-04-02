@@ -1,23 +1,22 @@
 package com.devmmurray.tasktimer
 
 import android.annotation.SuppressLint
-import android.content.ActivityNotFoundException
-import android.content.Intent
 import android.content.res.Configuration
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.devmmurray.tasktimer.R.mipmap.ic_launcher
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import kotlinx.android.synthetic.main.fragment_main.*
 
 private const val TAG = "MainActivity"
 private const val DIALOG_ID_CANCEL_EDIT = 1
@@ -30,6 +29,11 @@ class MainActivity : AppCompatActivity(),
     // Whether or not the activity is in 2-pane mode
     private var mTwoPane = false
     private var aboutDialog: AlertDialog? = null
+
+    private val viewModel by lazy {
+        ViewModelProvider(this)
+            .get(TaskTimerViewModel::class.java)
+    }
 
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +51,16 @@ class MainActivity : AppCompatActivity(),
             task_details_container.visibility = if (mTwoPane) View.INVISIBLE else View.GONE
             mainFragment.view?.visibility = View.VISIBLE
         }
+
+        viewModel.timing.observe(this, Observer<String> { timing ->
+                current_task.text =
+                    if (timing != null) {
+                        getString(R.string.timing_message, timing)
+                    } else {
+                        getString(R.string.no_task_message)
+                    }
+            })
+
     }
 
     private fun showEditPane() {
@@ -130,8 +144,7 @@ class MainActivity : AppCompatActivity(),
     }
 
 
-
-        override fun onTaskEdit(task: Task) {
+    override fun onTaskEdit(task: Task) {
         taskEditRequest(task)
     }
 

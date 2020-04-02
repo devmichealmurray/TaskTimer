@@ -73,7 +73,9 @@ class MainActivityFragment : Fragment(),
     }
 
     override fun onTaskLongClick(task: Task) {
-        TODO("Not yet implemented")
+        Log.d(TAG, ".onTaskLongClick called")
+        viewModel.timeTask(task)
+
     }
 
     override fun onPositiveDialogResult(dialogID: Int, args: Bundle) {
